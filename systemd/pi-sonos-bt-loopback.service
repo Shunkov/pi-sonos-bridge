@@ -1,0 +1,13 @@
+[Unit]
+Description=Pi Sonos Bridge Bluetooth loopback watcher
+After=pi-sonos-routing.service bluetooth.service
+Wants=bluetooth.service
+
+[Service]
+Type=simple
+ExecStart=/opt/pi-sonos-bridge/scripts/bt-loopback-watcher.sh
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target

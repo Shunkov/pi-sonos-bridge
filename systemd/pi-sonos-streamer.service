@@ -1,0 +1,15 @@
+[Unit]
+Description=Pi Sonos Bridge streamer (ffmpeg encoder + control UI)
+After=network-online.target pi-sonos-routing.service icecast2.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/pi-sonos-bridge
+EnvironmentFile=/etc/pi-sonos-bridge.env
+ExecStart=/usr/bin/python3 -m streamer.main
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

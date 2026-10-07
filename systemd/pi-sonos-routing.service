@@ -1,0 +1,13 @@
+[Unit]
+Description=Pi Sonos Bridge audio routing (virtual sink + line-in loopback)
+After=pipewire.service pipewire-pulse.service wireplumber.service
+Wants=pipewire.service pipewire-pulse.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/opt/pi-sonos-bridge/scripts/audio-routing.sh
+# Routing modules vanish if PipeWire restarts; re-run when this service restarts.
+
+[Install]
+WantedBy=default.target

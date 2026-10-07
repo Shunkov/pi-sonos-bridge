@@ -1,0 +1,8 @@
+FROM debian:bookworm-slim
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends icecast2 gettext-base \
+ && rm -rf /var/lib/apt/lists/*
+COPY config/icecast.xml /etc/icecast2/icecast.xml.tmpl
+# Render passwords at container start, then run in the foreground.
+CMD ["/bin/sh", "-c", "sed \"s/__SOURCE_PASSWORD__/${ICECAST_SOURCE_PASSWORD:-changeme}/g\" /etc/icecast2/icecast.xml.tmpl > /etc/icecast2/icecast.xml && mkdir -p /var/log/icecast2 && chown -R icecast2 /var/log/icecast2 2>/dev/null; exec icecast2 -c /etc/icecast2/icecast.xml"]
+EXPOSE 8000

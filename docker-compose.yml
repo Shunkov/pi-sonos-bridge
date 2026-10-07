@@ -1,0 +1,34 @@
+# Try the Sonos side end-to-end on any machine — no audio hardware needed.
+# The streamer runs in test_tone mode (440 Hz tone) so you can add
+# http://<this-machine>:8000/stream.mp3 to Sonos and hear it work.
+#
+#   ICECAST_SOURCE_PASSWORD=pick-one docker compose up --build
+#
+# On a real Pi, use scripts/install.sh instead — Docker cannot easily own
+# the host's Bluetooth / PipeWire session.
+services:
+  icecast:
+    build:
+      context: .
+      dockerfile: Dockerfile.icecast
+    environment:
+      ICECAST_SOURCE_PASSWORD: ${ICECAST_SOURCE_PASSWORD:-changeme}
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  streamer:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamer
+    environment:
+      AUDIO_MODE: test_tone
+      ICECAST_HOST: icecast
+      ICECAST_PORT: "8000"
+      ICECAST_SOURCE_PASSWORD: ${ICECAST_SOURCE_PASSWORD:-changeme}
+      ICECAST_PUBLIC_HOST: ${HOST_LAN_IP:-localhost}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - icecast
+    restart: unless-stopped

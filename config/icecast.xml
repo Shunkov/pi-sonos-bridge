@@ -1,0 +1,57 @@
+<icecast>
+    <!-- Installed to /etc/icecast2/icecast.xml by scripts/install.sh,
+         which replaces __SOURCE_PASSWORD__ with a generated password. -->
+    <location>Raspberry Pi</location>
+    <admin>pi@localhost</admin>
+    <hostname>localhost</hostname>
+
+    <limits>
+        <clients>10</clients>
+        <sources>2</sources>
+        <queue-size>524288</queue-size>
+        <client-timeout>30</client-timeout>
+        <source-timeout>10</source-timeout>
+    </limits>
+
+    <authentication>
+        <source-password>__SOURCE_PASSWORD__</source-password>
+        <relay-password>__SOURCE_PASSWORD__</relay-password>
+        <admin-user>admin</admin-user>
+        <admin-password>__SOURCE_PASSWORD__</admin-password>
+    </authentication>
+
+    <listen-socket>
+        <port>8000</port>
+        <!-- LAN only in practice: your router should not forward this port. -->
+    </listen-socket>
+
+    <mount type="normal">
+        <mount-name>/stream.mp3</mount-name>
+        <stream-name>Pi Sonos Bridge</stream-name>
+        <stream-description>Line-in and Bluetooth from Raspberry Pi</stream-description>
+        <genre>Local</genre>
+        <!-- Keep bursts small so Sonos starts quickly and delay stays low. -->
+        <burst-size>65536</burst-size>
+    </mount>
+
+    <fileserve>1</fileserve>
+    <paths>
+        <basedir>/usr/share/icecast2</basedir>
+        <logdir>/var/log/icecast2</logdir>
+        <webroot>/usr/share/icecast2/web</webroot>
+        <adminroot>/usr/share/icecast2/admin</adminroot>
+        <alias source="/" destination="/status.xsl"/>
+    </paths>
+    <logging>
+        <accesslog>access.log</accesslog>
+        <errorlog>error.log</errorlog>
+        <loglevel>3</loglevel>
+    </logging>
+    <security>
+        <chroot>0</chroot>
+        <changeowner>
+            <user>icecast2</user>
+            <group>nogroup</group>
+        </changeowner>
+    </security>
+</icecast>
